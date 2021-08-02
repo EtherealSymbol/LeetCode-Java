@@ -73,4 +73,73 @@ public class Mid {
         * */
     }
 
+    @Test
+    public void testMySqrt(){
+//        System.out.println(mySqrt(0));
+//        for (int i = 0; i < 1000; i++) {
+//            System.out.println(i+"的平方根是："+mySqrt(i)+"    "+Math.sqrt(i));
+//        }
+//        System.out.println(Math.sqrt(Integer.MAX_VALUE));
+        /*
+        * 未通过用例
+        * 输入：2147395599
+        * 输出：1073697799
+        * 预期结果：46339
+        * 分析原因：起初我以为是输入越界，后来发现并不是这样，2147395599<2147483647(Integer.MAX_VALUE)；
+        *   那是什么原因导致的呢？原来是因为2147395599/2=1073697799,
+        *   根据我的算法的原理：1073697799*1073697799的结果肯定是越界了！
+        * */
+        System.out.println(mySqrt(Integer.MAX_VALUE)+"   "+ StrictMath.sqrt(Integer.MAX_VALUE));
+    }
+
+    /*
+    * 实现int sqrt(int x)函数。
+    * 计算并返回x的平方根，其中x 是非负整数。
+    * 由于返回类型是整数，结果只保留整数的部分，小数部分将被舍去。
+    * */
+    public int mySqrt(int x) {
+        if (x==1) return 1;
+        // 为了避免越界：Math.sqrt(Integer.MAX_VALUE)=46340
+        int mid = x/2>46340? 46340 : x/2;
+        int res=0;
+        for (int i=mid; i >= 0; i--){
+            if (i*i<=x){
+                res=i;
+                break;
+            }
+            res=i;
+        }
+        return res;
+        /*
+        * 执行用时：13 ms, 在所有 Java 提交中击败了7.44%的用户
+        * 内存消耗：35.6 MB, 在所有 Java 提交中击败了24.99%的用户
+        * */
+    }
+    /*
+    * 看java.lang.Math的静态方法sqrt是怎么实现的：
+    * public final class Math {
+    *   public static double sqrt(double a) {
+            return StrictMath.sqrt(a); // default impl. delegates to StrictMath
+                                       // Note that hardware sqrt instructions
+                                       // frequently can be directly used by JITs
+                                       // and should be much faster than doing
+                                       // Math.sqrt in software.
+        }
+    * }
+    *
+    * public final class StrictMath {
+    *   public static native double sqrt(double a);
+    * }
+    * 结果底层用C实现的
+    * */
+
+    // 官方
+    public int mySqrtOffical(int x) {
+        if (x == 0) {
+            return 0;
+        }
+        int ans = (int) Math.exp(0.5 * Math.log(x));
+        return (long) (ans + 1) * (ans + 1) <= x ? ans + 1 : ans;
+    }
+
 }
